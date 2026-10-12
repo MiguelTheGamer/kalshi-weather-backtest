@@ -1,0 +1,24 @@
+{
+ "Other": {
+  "orders": 45,
+  "filled": 5,
+  "fill_rate": 0.111,
+  "median_queue_ahead": 6418.64,
+  "median_minutes_to_fill": 3.5,
+  "median_pct_of_queue_cleared_if_unfilled": 0.0,
+  "settled_fills": 0,
+  "wins": 0,
+  "paper_pnl_dollars": 0
+ },
+ "All": {
+  "orders": 45,
+  "filled": 5,
+  "fill_rate": 0.111,
+  "median_queue_ahead": 6418.64,
+  "median_minutes_to_fill": 3.5,
+  "median_pct_of_queue_cleared_if_unfilled": 0.0,
+  "settled_fills": 0,
+  "wins": 0,
+  "paper_pnl_dollars": 0
+ }
+}

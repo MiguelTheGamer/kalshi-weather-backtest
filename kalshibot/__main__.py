@@ -2,6 +2,7 @@
 import argparse
 import json
 import logging
+import time
 from datetime import date
 
 from .backtest import run_series, save_calibration, save_summary
@@ -27,7 +28,26 @@ def main() -> None:
     mk = sub.add_parser("makers", help="realized maker returns from trade records")
     mk.add_argument("--markets", type=int, default=1500)
     mk.add_argument("--report-only", action="store_true", help="print data/maker_results.json")
+    qp = sub.add_parser("queue", help="paper-simulate a new 97-99c maker order joining the queue")
+    qp.add_argument("--minutes", type=int, default=0, help="watch live markets this long, then report")
+    qp.add_argument("--start-at", help="UTC time to start watching, HH:MM (waits until then)")
     args = p.parse_args()
+
+    if args.cmd == "queue":
+        from .queue import report, watch
+        if args.start_at:
+            hh, mm = map(int, args.start_at.split(":"))
+            now = time.gmtime()
+            wait = ((hh * 60 + mm) - (now.tm_hour * 60 + now.tm_min)) % (24 * 60) * 60 - now.tm_sec
+            print(f"waiting {wait // 60} min until {args.start_at} UTC", flush=True)
+            # Check the wall clock in short naps so a laptop sleep doesn't push the start late.
+            start = time.time() + max(0, wait)
+            while time.time() < start:
+                time.sleep(min(60, start - time.time()))
+        if args.minutes:
+            watch(args.minutes * 60)
+        print(json.dumps(report(), indent=1))
+        return
 
     if args.cmd == "makers":
         from .makers import print_report, run
