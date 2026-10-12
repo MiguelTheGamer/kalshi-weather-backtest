@@ -24,7 +24,17 @@ def main() -> None:
     ls.add_argument("--days", type=int, default=120)
     ls.add_argument("--windows", type=int, default=80)
     ls.add_argument("--report-only", action="store_true", help="print data/longshot_results.json")
+    mk = sub.add_parser("makers", help="realized maker returns from trade records")
+    mk.add_argument("--markets", type=int, default=1500)
+    mk.add_argument("--report-only", action="store_true", help="print data/maker_results.json")
     args = p.parse_args()
+
+    if args.cmd == "makers":
+        from .makers import print_report, run
+        if not args.report_only:
+            run(n_markets=args.markets)
+        print_report()
+        return
 
     if args.cmd == "longshot":
         from .longshot import print_report, run

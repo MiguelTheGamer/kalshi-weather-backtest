@@ -43,6 +43,29 @@ snapshots from settled non-parlay markets with volume of at least 500, priced
 - Kalshi's public API only returns about 2 months of settled markets; older
   windows came back empty, so the halves split at the median close time.
 
+## Follow-up: what makers actually earn, from trade records (2026-10-12)
+
+Each Kalshi trade records the taker's side, so realized maker P&L needs no
+fill assumptions; adverse selection is already included. The sample was 1,500
+settled markets (at most 3 per event), about 950k fills and 65M contracts, with
+maker fees charged on every fill. Markets with over 10k trades were skipped
+whole (27 of them). `kalshibot/makers.py`, `python -m kalshibot makers`.
+
+- **Makers overall break even:** −0.9% ± 3.1% net. Sports (−1.2%), crypto
+  (−0.2%) and commodities (+0.2%) are all roughly zero. There's no general
+  market-making edge.
+- **The one segment that passed the pre-committed rule** (positive in both
+  halves, more than 2 SE, enough size) is makers buying the near-certain side
+  at **97–99¢**, i.e. selling 1–3¢ lottery tickets to takers. Pooled
+  **+0.9% ± 0.2%** per dollar, and +1.2% in sports, mostly in the last 2h before
+  close. This is the favorite-longshot bias, and makers are the ones who
+  collect it.
+- **The tail is real.** Financials at 97–99¢ lost 19%, because one favorite
+  lost. A loss costs about 98¢, against about 1¢ per win.
+- **Unmeasured:** whether a *new* order would ever fill. The 1¢ level usually
+  has a deep queue in time priority, so the measured returns belong to makers
+  already at the front.
+
 ## Useful facts learned
 - Weather markets now settle on **The Weather Company** (weather.com/kalshi), not the NWS CLI report.
 - The official high is usually **+1°F above the max hourly METAR** (0: 39%, +1: 52%, +2: 7% of 204 station-days).
