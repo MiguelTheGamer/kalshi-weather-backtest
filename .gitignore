@@ -5,3 +5,4 @@ __pycache__/
 *.pem
 data/cache/
 .coverage
+data/*.log

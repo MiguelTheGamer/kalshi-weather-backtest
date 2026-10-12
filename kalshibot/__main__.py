@@ -20,7 +20,18 @@ def main() -> None:
         s.add_argument("--series", nargs="+", default=list(DEFAULT_SERIES))
     sub.choices["intraday"].add_argument("--hours", nargs="+", type=int, default=[11, 13, 15, 17],
                                          help="decision hours, local standard time")
+    ls = sub.add_parser("longshot", help="favorite-longshot test across all non-parlay markets")
+    ls.add_argument("--days", type=int, default=120)
+    ls.add_argument("--windows", type=int, default=80)
+    ls.add_argument("--report-only", action="store_true", help="print data/longshot_results.json")
     args = p.parse_args()
+
+    if args.cmd == "longshot":
+        from .longshot import print_report, run
+        if not args.report_only:
+            run(days=args.days, windows=args.windows)
+        print_report()
+        return
 
     load_dotenv()
     logging.basicConfig(level=logging.ERROR)
