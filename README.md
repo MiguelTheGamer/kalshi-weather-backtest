@@ -86,6 +86,25 @@ on about 48 days each, which is the pattern noise produces, so I don't treat
 it as evidence. The accuracy comparison, which doesn't depend on a handful of
 trades, points the same way in every cell.
 
+## Follow-up: is there a favorite-longshot bias to exploit?
+
+[Research on Kalshi](https://cepr.org/voxeu/columns/economics-kalshi-prediction-market)
+finds a favorite-longshot bias: cheap contracts lose their buyers money. So I
+tested the obvious trade, buying NO on longshots, across all non-parlay
+markets. The sample was about 11,000 snapshots from settled markets priced
+24h and 2h before close (`python -m kalshibot longshot`).
+
+| Strategy | Result |
+|---|---|
+| Buy NO on longshots at the market price | Lost 2–8% after fees in every price bucket, in both halves of the sample |
+| Market calibration at the mid price | Well calibrated (e.g. 10–20¢ contracts won 16–18% of the time) |
+| Post orders and wait for a fill | Looks profitable, but only because every order is assumed to fill, so it's an upper bound |
+
+The longshot buyers' losses mostly go to the spread and fees, not to anyone
+betting against them. I also wrote the go/no-go rule before running the test,
+and it turned out to be underspecified. The details, including how I handled
+that, are in [FINDINGS.md](FINDINGS.md).
+
 ## What I learned
 
 1. **These markets are efficient against public data.** Other participants
