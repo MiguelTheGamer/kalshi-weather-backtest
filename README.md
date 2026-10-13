@@ -105,6 +105,27 @@ betting against them. I also wrote the go/no-go rule before running the test,
 and it turned out to be underspecified. The details, including how I handled
 that, are in [FINDINGS.md](FINDINGS.md).
 
+## Follow-up: what do market makers actually earn?
+
+Every Kalshi trade records which side was the taker, so the maker's realized
+P&L can be computed directly, with no fill assumptions and with adverse
+selection included. The sample was 1,500 settled markets (about 950k fills and
+65M contracts), with maker fees charged on every fill
+(`python -m kalshibot makers`).
+
+| Segment | Net return per $ |
+|---|---|
+| All maker fills | −0.9% ± 3.1% (break-even) |
+| Sports / crypto / commodities | −1.2% / −0.2% / +0.2% |
+| **Buying the 97–99¢ side** (selling 1–3¢ long shots) | **+0.9% ± 0.2%**, +1.2% in sports, positive in both halves |
+
+The only real edge is collecting the favorite-longshot bias: posting orders on
+near-certain outcomes, mostly in the final two hours of sports games. It's thin
+(~1¢ per win against ~98¢ per loss), and it belongs to makers already at the
+front of the queue. `python -m kalshibot queue` paper-simulates a new order
+joining the back of the real queue to measure whether it would ever fill; a
+live run during NFL, MLB, NBA and NHL games is in progress.
+
 ## What I learned
 
 1. **These markets are efficient against public data.** Other participants
